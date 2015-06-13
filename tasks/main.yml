@@ -1,0 +1,31 @@
+---
+
+- name: Test if distribution is RedHat
+  assert:
+    that: >
+      ansible_os_family == "RedHat" and
+      ansible_distribution_major_version | int <= 6
+
+- name: Install Grafana
+  yum:
+    name: "{{ grafana_pkg }}"
+    state: present
+  notify:
+    - Restart grafana
+  tags:
+    - grafana_pkg
+
+- name: Configure Grafana
+  template:
+    src: grafana.ini.j2
+    dest: /etc/grafana/grafana.ini
+  notify:
+    - Restart grafana
+  tags:
+    - grafana_config
+
+- name: Make sure uchiva service is enabled and started
+  service:
+    name: grafana-server
+    enabled: yes
+    state: started

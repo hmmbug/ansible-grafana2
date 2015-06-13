@@ -1,0 +1,196 @@
+##################### Grafana Configuration Example #####################
+#
+# Everything has defaults so you only need to uncomment things you want to
+# change
+
+app_mode = {{ grafana_app_mode }}
+
+#################################### Paths ####################################
+[paths]
+# Path to where grafana can store temp files, sessions, and the sqlite3 db (if that is useD)
+#
+data = {{ grafana_paths_data }}
+#
+# Directory where grafana can store logs
+#
+logs = {{ grafana_paths_logs }}
+
+#################################### Server ####################################
+[server]
+# Protocol (http or https)
+protocol = {{ grafana_server_protocol }}
+
+# The ip address to bind to, empty will bind to all interfaces
+http_addr = {{ grafana_server_http_addr }}
+
+# The http port  to use
+;http_port = {{ grafana_server_http_port }}
+
+# The public facing domain name used to access grafana from a browser
+domain = {{ grafana_server_domain }}
+
+# The full public facing url
+root_url = {{ grafana_server_root_url }}
+
+# Log web requests
+router_logging = {{ grafana_server_router_logging }}
+
+# the path relative working path
+static_root_path = {{ grafana_server_static_root_path }}
+
+# enable gzip
+enable_gzip = {{ grafana_server_enable_gzip }}
+
+# https certs & key file
+cert_file = {{ grafana_server_cert_file }}
+cert_key = {{ grafana_server_key_file }}
+
+#################################### Database ####################################
+[database]
+# Either "mysql", "postgres" or "sqlite3", it's your choice
+type = {{ grafana_database_type }}
+host = {{ grafana_database_host }}
+name = {{ grafana_database_name }}
+user = {{ grafana_database_user }}
+password = {{ grafana_database_password }}
+
+# For "postgres" only, either "disable", "require" or "verify-full"
+ssl_mode = {{ grafana_database_ssl_mode }}
+
+# For "sqlite3" only, path relative to data_path setting
+path = {{ grafana_database_path }}
+
+#################################### Session ####################################
+[session]
+# Either "memory", "file", "redis", "mysql", default is "memory"
+provider = {{ grafana_session_provider }}
+
+# Provider config options
+# memory: not have any config yet
+# file: session dir path, is relative to grafana data_path
+# redis: config like redis server addr, poolSize, password, e.g. `127.0.0.1:6379,100,grafana`
+# mysql: go-sql-driver/mysql dsn config string, e.g. `user:password@tcp(127.0.0.1)/database_name`
+provider_config = {{ grafana_session_provider_config }}
+
+# Session cookie name
+cookie_name =  {{ grafana_session_cookie_name }}
+
+# If you use session in https only, default is false
+cookie_secure = {{ grafana_session_cookie_secure }}
+
+# Session life time, default is 86400
+session_life_time = {{ grafana_session_cookie_life_time }}
+
+#################################### Analytics ####################################
+[analytics]
+# Server reporting, sends usage counters to stats.grafana.org every 24 hours.
+# No ip addresses are being tracked, only simple counters to track
+# running instances, dashboard and error counts. It is very helpful to us.
+# Change this option to false to disable reporting.
+reporting_enabled = {{ grafana_analytics_reporting_enabled }}
+
+# Google Analytics universal tracking code, only enabled if you specify an id here
+google_analytics_ua_id =
+
+#################################### Security ####################################
+[security]
+# default admin user, created on startup
+admin_user = {{ grafana_security_admin_user }}
+
+# default admin password, can be changed before first start of grafana,  or in profile settings
+admin_password = {{ grafana_security_admin_password }}
+
+# used for signing
+secret_key = {{ grafana_security_secret_key }}
+
+# Auto-login remember days
+login_remember_days = {{ grafana_security_login_remember_days }}
+cookie_username =  {{ grafana_security_cookie_username }}
+cookie_remember_name = {{ grafana_security_cookie_remember_name }}
+
+#################################### Users ####################################
+[users]
+# disable user signup / registration
+allow_sign_up = {{ grafana_users_allow_sign_up }}
+
+# Allow non admin users to create organizations
+allow_org_create = {{ grafana_users_allow_org_create }}
+
+# Set to true to automatically assign new users to the default organization (id 1)
+auto_assign_org = {{ grafana_users_auto_assign_org }}
+
+# Default role new users will be automatically assigned (if disabled above is set to true)
+auto_assign_org_role = {{ grafana_users_auto_assign_org_role }}
+
+#################################### Anonymous Auth ##########################
+[auth.anonymous]
+# enable anonymous access
+enabled = {{ grafana_auth_anon_enabled }}
+
+# specify organization name that should be used for unauthenticated users
+org_name = {{ grafana_auth_anon_org_name }}
+
+# specify role for unauthenticated users
+org_role = {{ grafana_auth_anon_org_role }}
+
+#################################### Github Auth ##########################
+[auth.github]
+enabled = {{ grafana_auth_github_enabled }}
+client_id = {{ grafana_auth_github_client_id }}
+client_secret = {{ grafana_auth_github_client_secret }}
+scopes = {{ grafana_auth_github_scopes }}
+auth_url = {{ grafana_auth_github_auth_url }}
+token_url = {{ grafana_auth_github_token_url }}
+api_url = {{ grafana_auth_github_api_url }}
+allowed_domains = {{ grafana_auth_github_allowed_domains }}
+
+#################################### Google Auth ##########################
+[auth.google]
+enabled = {{ grafana_auth_google_enabled }}
+client_id = {{ grafana_auth_google_client_id }}
+client_secret = {{ grafana_auth_google_client_secret }}
+scopes = {{ grafana_auth_google_scopes }}
+auth_url = {{ grafana_auth_google_auth_url }}
+token_url = {{ grafana_auth_google_token_url }}
+api_url = {{ grafana_auth_google_api_url }}
+allowed_domains = {{ grafana_auth_google_allowed_domains }}
+
+#################################### Logging ##########################
+[log]
+# Either "console", "file", default is "console"
+# Use comma to separate multiple modes, e.g. "console, file"
+mode = {{ grafana_log_mode }}
+
+# Buffer length of channel, keep it as it is if you don't know what it is.
+buffer_len = {{ grafana_log_buffer_len }}
+
+# Either "Trace", "Debug", "Info", "Warn", "Error", "Critical", default is "Trace"
+level = {{ grafana_log_level }}
+
+# For "console" mode only
+[log.console]
+level = {{ grafana_log_console_level }}
+
+# For "file" mode only
+[log.file]
+level = {{ grafana_log_file_level }}
+# This enables automated log rotate(switch of following options), default is true
+log_rotate = {{ grafana_log_file_log_rotate }}
+
+# Max line number of single file, default is 1000000
+max_lines = {{ grafana_log_file_max_lines }}
+
+# Max size shift of single file, default is 28 means 1 << 28, 256MB
+max_lines_shift = {{ grafana_log_file_max_lines_shift }}
+
+# Segment log daily, default is true
+daily_rotate = {{ grafana_log_file_daily_rotate }}
+
+# Expired days of log file(delete after max days), default is 7
+max_days = {{ grafana_log_file_max_days }}
+
+#################################### AMPQ Event Publisher ##########################
+[event_publisher]
+enabled = {{ grafana_event_publisher_enabled }}
+rabbitmq_url = {{ grafana_event_publisher_rabbitmq_url }}
+exchange = {{ grafana_event_publisher_exchange }}
