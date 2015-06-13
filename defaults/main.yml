@@ -1,12 +1,15 @@
 ---
-grafana_yum_repo_url: "http://{{ yum_server }}/agoda"
+# RPM package
 grafana_pkg: grafana
 
+# The following vars map directly to settings in the grafana.ini file
 grafana_app_mode: production
 
+# paths
 grafana_paths_data: /var/lib/grafana
 grafana_paths_logs: /var/log/grafana
 
+# http server
 grafana_server_protocol: http
 grafana_server_http_addr: 
 grafana_server_http_port: 3000
