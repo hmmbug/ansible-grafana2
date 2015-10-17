@@ -4,7 +4,26 @@
   assert:
     that: >
       ansible_os_family == "RedHat" and
-      ansible_distribution_major_version | int <= 6
+      ansible_distribution_major_version | int <= 7
+
+- name: Check if ca-cert CA is installed
+  stat: path=/etc/pki/tls/certs/ca-bundle.crt
+  register: cacert
+  tags:
+    - grafana_pkg
+
+- name: Create yum repository configuration
+  template:
+    src: grafana.repo.j2
+    dest: /etc/yum.repos.d/grafana.repo
+    mode: 0644
+  tags:
+    - grafana_pkg
+  when: cacert.stat.exists
+
+- name: Import RPM keys
+  rpm_key: state=present key="{{ item }}"
+  with_items: "{{ grafana_rpm_keys }}"
 
 - name: Install Grafana
   yum:
@@ -12,6 +31,12 @@
     state: present
   notify:
     - Restart grafana
+  tags:
+    - grafana_pkg
+  register: pkg
+- name: Systemd post install activation
+  shell: systemctl daemon-reload
+  when: ansible_os_family == "RedHat" and ansible_os_family == "RedHat" and ansible_distribution_major_version | int == 7 and pkg.changed
   tags:
     - grafana_pkg
 
@@ -24,7 +49,7 @@
   tags:
     - grafana_config
 
-- name: Make sure uchiva service is enabled and started
+- name: Make sure grafana service is enabled and started
   service:
     name: grafana-server
     enabled: yes

@@ -11,7 +11,7 @@ grafana_paths_logs: /var/log/grafana
 
 # http server
 grafana_server_protocol: http
-grafana_server_http_addr: 
+grafana_server_http_addr:
 grafana_server_http_port: 3000
 grafana_server_domain: localhost
 grafana_server_root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
@@ -95,10 +95,10 @@ grafana_log_buffer_len: 10000
 grafana_log_level: Info
 
 # log console
-grafana_log_console_level: 
+grafana_log_console_level:
 
 # log file
-grafana_log_file_level: 
+grafana_log_file_level:
 grafana_log_file_log_rotate: true
 grafana_log_file_max_lines: 1000000
 grafana_log_file_max_lines_shift: 28
@@ -110,3 +110,10 @@ grafana_event_publisher_enabled: false
 grafana_event_publisher_rabbitmq_url: amqp://localhost/
 grafana_event_publisher_exchange: grafana_events
 
+grafana_rpm_keys:
+  - https://packagecloud.io/gpg.key
+  -  https://grafanarel.s3.amazonaws.com/RPM-GPG-KEY-grafana
+
+# Set it to '1' if you want to enable gpg check on repo
+# /!\ you need to manually accept keys
+grafana_yum_repo_gpgcheck: 0
