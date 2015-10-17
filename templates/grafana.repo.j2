@@ -1,0 +1,9 @@
+[grafana]
+name=grafana
+baseurl=https://packagecloud.io/grafana/stable/el/6/$basearch
+repo_gpgcheck={{ grafana_yum_repo_gpgcheck }}
+enabled=1
+gpgcheck=1
+gpgkey= {{ grafana_rpm_keys | join("\n") }}
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
