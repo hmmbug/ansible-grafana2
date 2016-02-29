@@ -11,6 +11,7 @@
   register: cacert
   tags:
     - grafana_pkg
+  when: grafana_manage_repos
 
 - name: Create yum repository configuration
   template:
@@ -19,11 +20,12 @@
     mode: 0644
   tags:
     - grafana_pkg
-  when: cacert.stat.exists
+  when: grafana_manage_repos and cacert.stat.exists
 
 - name: Import RPM keys
   rpm_key: state=present key="{{ item }}"
   with_items: "{{ grafana_rpm_keys }}"
+  when: grafana_manage_repos
 
 - name: Install Grafana
   yum:
