@@ -14,6 +14,7 @@ grafana_server_protocol: http
 grafana_server_http_addr:
 grafana_server_http_port: 3000
 grafana_server_domain: localhost
+grafana_server_enforce_domain: false
 grafana_server_root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
 grafana_server_router_logging: false
 grafana_server_static_root_path: public
@@ -29,26 +30,33 @@ grafana_database_user: root
 grafana_database_password:
 # For "postgres" only, either "disable", "require" or "verify-full"
 grafana_database_ssl_mode: disable
+
 # For "sqlite3" only, path relative to data_path setting
 grafana_database_path: grafana.db
 
 # Session
-# Either "memory", "file", "redis", "mysql", default is "memory"
+# Either "memory", "file", "redis", "mysql", "postgres", default is "file"
 grafana_session_provider: file
 
-# session provider config options
+# Provider config options
 # memory: not have any config yet
 # file: session dir path, is relative to grafana data_path
-# redis: config like redis server addr, poolSize, password, e.g. `127.0.0.1:6379,100,grafana`
-# mysql: go-sql-driver/mysql dsn config string, e.g. `user:password@tcp(127.0.0.1)/database_name`
+# redis: config like redis server e.g. `addr=127.0.0.1:6379,pool_size=100,db=grafana`
+# postgres: user=a password=b host=localhost port=5432 dbname=c sslmode=disable
+# mysql: go-sql-driver/mysql dsn config string, examples:
+#         `user:password@tcp(127.0.0.1:3306)/database_name`
+#         `user:password@unix(/var/run/mysqld/mysqld.sock)/database_name`
+# memcache: 127.0.0.1:11211
 grafana_session_provider_config: sessions
 grafana_session_cookie_name: grafana_sess
 grafana_session_cookie_secure: false
 grafana_session_cookie_life_time: 86400
+grafana_session_gc_interval_time: 86400
 
 # analytics
 grafana_analytics_reporting_enabled: false
-grafana_google_analytics_ua_id: ""
+grafana_analytics_ua_id: ""
+grafana_analytics_tag_manager_id: ""
 
 # security
 grafana_security_admin_user: admin
@@ -57,12 +65,16 @@ grafana_security_secret_key: CHANGEME
 grafana_security_login_remember_days: 7
 grafana_security_cookie_username: grafana_user
 grafana_security_cookie_remember_name: grafana_remember
+grafana_security_disable_gravatar: false
+grafana_security_proxy_whitelist: ""
 
 # users
 grafana_users_allow_sign_up: true
 grafana_users_allow_org_create: true
 grafana_users_auto_assign_org: true
 grafana_users_auto_assign_org_role: Viewer
+grafana_users_verify_email_enabled: false
+grafana_users_login_hint: email or username
 
 # anon auth
 grafana_auth_anon_enabled: false
@@ -71,16 +83,19 @@ grafana_auth_anon_org_role: Viewer
 
 # anon github
 grafana_auth_github_enabled: false
+grafana_auth_github_allow_sign_up: false
 grafana_auth_github_client_id: some_id
 grafana_auth_github_client_secret: some_secret
 grafana_auth_github_scopes: user:email
 grafana_auth_github_auth_url: https://github.com/login/oauth/authorize
 grafana_auth_github_token_url: https://github.com/login/oauth/access_token
 grafana_auth_github_api_url: https://api.github.com/user
-grafana_auth_github_allowed_domains: mycompany.com othercompany.com
+grafana_auth_github_team_ids: ""
+grafana_auth_github_allowed_organizations: ""
 
 # google auth
 grafana_auth_google_enabled: false
+grafana_auth_google_allow_sign_up: false
 grafana_auth_google_client_id: some_client_id
 grafana_auth_google_client_secret: some_client_secret
 grafana_auth_google_scopes: https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email
@@ -89,6 +104,33 @@ grafana_auth_google_token_url: https://accounts.google.com/o/oauth2/token
 grafana_auth_google_api_url: https://www.googleapis.com/oauth2/v1/userinfo
 grafana_auth_google_allowed_domains: mycompany.com othercompany.com
 
+# basic auth
+grafana_auth_basic_enabled: false
+
+# proxy auth
+grafana_auth_proxy_enabled: false
+grafana_auth_proxy_header_name: X-WEBAUTH-USER
+grafana_auth_proxy_header_property: username
+grafana_auth_proxy_auto_sign_up: true
+
+# ldap auth
+grafana_auth_ldap_enabled: false
+grafana_auth_ldap_config_file: /etc/grafana/ldap.toml
+
+# smtp email
+grafana_smtp_enabled: false
+grafana_smtp_host: localhost:25
+grafana_smtp_user: ""
+grafana_smtp_password: ""
+grafana_smtp_cert_file: ""
+grafana_smtp_key_file: ""
+grafana_smtp_skip_verify: false
+grafana_smtp_from_address: admin@grafana.localhost
+
+# emails
+grafana_emails_welcome_email_on_sign_up: false
+grafana_emails_templates_pattern: emails/*.html
+
 # log
 grafana_log_mode: "console, file"
 grafana_log_buffer_len: 10000
@@ -96,6 +138,7 @@ grafana_log_level: Info
 
 # log console
 grafana_log_console_level:
+grafana_log_console_formatting: false
 
 # log file
 grafana_log_file_level:
@@ -105,14 +148,38 @@ grafana_log_file_max_lines_shift: 28
 grafana_log_file_daily_rotate: true
 grafana_log_file_max_days: 7
 
+# log syslog
+grafana_log_syslog_level: ""
+grafana_log_syslog_network: ""
+grafana_log_syslog_address: ""
+grafana_log_syslog_facility: ""
+grafana_log_syslog_tag: ""
+
 # event_publisher
 grafana_event_publisher_enabled: false
 grafana_event_publisher_rabbitmq_url: amqp://localhost/
 grafana_event_publisher_exchange: grafana_events
 
+# dashboard json files
+grafana_dashboards_json_enabled: false
+grafana_dashboards_json_path: /var/lib/grafana/dashboards
+
+# usage quota
+grafana_quota_enabled: false
+grafana_quota_org_users: 10
+grafana_quota_org_dashboard: 100
+grafana_quota_org_data_source: 10
+grafana_quota_org_api_key: 10
+grafana_quota_user_org: 10
+grafana_quota_global_user: -1
+grafana_quota_global_org: -1
+grafana_quota_global_dashboard: -1
+grafana_quota_global_api_key: -1
+grafana_quota_global_session: -1
+
 grafana_rpm_keys:
   - https://packagecloud.io/gpg.key
-  -  https://grafanarel.s3.amazonaws.com/RPM-GPG-KEY-grafana
+  - https://grafanarel.s3.amazonaws.com/RPM-GPG-KEY-grafana
 
 # Set it to '1' if you want to enable gpg check on repo
 # /!\ you need to manually accept keys
