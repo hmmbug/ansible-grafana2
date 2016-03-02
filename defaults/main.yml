@@ -11,7 +11,7 @@ grafana_paths_logs: /var/log/grafana
 
 # http server
 grafana_server_protocol: http
-grafana_server_http_addr:
+grafana_server_http_addr: ""
 grafana_server_http_port: 3000
 grafana_server_domain: localhost
 grafana_server_enforce_domain: false
