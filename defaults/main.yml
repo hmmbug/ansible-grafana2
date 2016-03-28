@@ -2,6 +2,10 @@
 # RPM package
 grafana_pkg: grafana
 
+# Set to "false" if you don't want to manage the package repositories from this
+# role. Usefull if are behind a proxy or have a custom mirror.
+grafana_manage_repos: true
+
 # The following vars map directly to settings in the grafana.ini file
 grafana_app_mode: production
 
