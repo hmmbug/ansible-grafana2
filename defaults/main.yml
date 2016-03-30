@@ -188,3 +188,31 @@ grafana_rpm_keys:
 # Set it to '1' if you want to enable gpg check on repo
 # /!\ you need to manually accept keys
 grafana_yum_repo_gpgcheck: 0
+
+grafana_ldap_verbose_logging: false
+grafana_ldap_host: "127.0.0.1"
+grafana_ldap_port: 636
+grafana_ldap_use_ssl: true
+grafana_ldap_ssl_skip_verify: false
+grafana_ldap_bind_dn:  "cn=admin,dc=grafana,dc=org"
+grafana_ldap_bind_password: "grafana"
+grafana_ldap_search_filter: "(cn=%s)"
+grafana_ldap_base_dns: ["dc=grafana,dc=org"]
+
+# In POSIX LDAP schemas, without memberOf attribute a secondary query must be made for groups.
+# This is done by enabling group_search_filter below. You must also set member_of= "cn"
+# in [servers.attributes] below.
+# grafana_ldap_group_search_filter: "(&(objectClass=posixGroup)(memberUid=%s))"
+grafana_ldap_group_search_filter: None
+grafana_ldap_group_search_base_dns:  ["ou=groups,dc=grafana,dc=org"]
+
+grafana_ldap_attributes_name: "givenName"
+grafana_ldap_attributes_surname: "sn"
+grafana_ldap_attributes_username: "cn"
+grafana_ldap_attributes_member_of: "memberOf"
+grafana_ldap_attributes_email: "email"
+
+grafana_ldap_group_mappings:
+  - group_dn: "cn=admins,dc=grafana,dc=org"
+    org_role: "Admin"
+    org_id: 1
