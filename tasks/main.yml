@@ -44,12 +44,15 @@
 
 - name: Configure Grafana
   template:
-    src: grafana.ini.j2
-    dest: /etc/grafana/grafana.ini
+    src: "{{ item }}.j2"
+    dest: "/etc/grafana/{{ item }}"
   notify:
     - Restart grafana
   tags:
     - grafana_config
+  with_items:
+    - grafana.ini
+    - ldap.toml
 
 - name: Make sure grafana service is enabled and started
   service:
