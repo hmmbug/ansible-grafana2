@@ -216,3 +216,5 @@ grafana_ldap_group_mappings:
   - group_dn: "cn=admins,dc=grafana,dc=org"
     org_role: "Admin"
     org_id: 1
+
+grafana_plugins: {}
